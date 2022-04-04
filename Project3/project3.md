@@ -11,4 +11,8 @@
 
 `sudo apt-get install -ynodejs`
 
-![alt text](./Screenshot_1.png)
+![alt text](./Screenshot_2.png)
+
+`npm install express`
+
+![alt text](./Screenshot_3.png)
