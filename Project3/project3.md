@@ -1,4 +1,8 @@
 # MERN STACK IMPLEMENTATION
 ## Creating a SIMPLE TO-DO APPLICATION ON MERN WEB STACK
-Sudo Apt Update
-![](2022-04-04-15-58-38.png)
+`sudo apt update`
+![alt text](./sudo-apt-update.png)
+`sudo apt upgrade`
+![alt text](./Screenshot_1.png)
+`sudo apt-get install -ynodejs`
+![alt text](./Screenshot_1.png)
