@@ -1,0 +1,10 @@
+lsblk - show partitions on drive in linux
+
+gdisk - partition drive
+sudo gdisk /dev/xvdf
+sudo gdisk /dev/xvdg
+sudo gdisk /dev/xvdh
+
+Install LVM package
+
+ sudo yum install lvm2 -y
