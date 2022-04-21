@@ -250,3 +250,5 @@ Done!
 
 ![alt text](./finally.png)
 
+REPEAT PROCESS ON LAST 2 SERVERS
+
