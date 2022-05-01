@@ -1,0 +1,12 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		},
+		{
+			"name": "ansible-config-mgt-2",
+			"path": "ansible-config-mgt-2"
+		}
+	],
+	"settings": {}
+}
