@@ -150,6 +150,83 @@ Connect to ansible /jenkins server
 ![alt text](./ubuntu.png)
 
 
+Some problems came up.
+
+Kept timing out when tried to connect. Troubleshhot.
+
+Checked ec2 and found out that the jenkins server had an error.
+
+![alt text](./j.png)
+
+So i stopped and started the instance.
+
+This gave the instance a new ip. So i decided to get a elastic ip and attach it to the jenkins-ansible server.
+
+![alt text](./kk.png)
+![alt text](./k.png)
+
+
+
+So i had to change the config in webhook in github ansible project
+
+
+![alt text](./kkk.png)
+
+And do another build.
+
+Now i opened the remote server. It faiiled 4 times and i kept clicking retry.
+
+![alt text](./remote.png)
+
+Now run
+
+ansible-playbook -i /var/lib/jenkins/jobs/ansible/builds/9/archive/inventory/dev.yml /var/lib/jenkins/jobs/ansible/builds/9/archive/playbooks/common.yml 
+
+It failed
+
+![alt text](./stuck.png)
+
+I checked the dev.yml
+
+![alt text](./user.png)
+
+The db server is ubuntu and not redhat, so i corrected the ssh user in dev.yml to ubuntu.
+
+I also noticed that the db server is listed as redhat instead of ubuntu on so i corrected that.
+
+It worked
+
+![alt text](./success.png)
+
+
+Confirm wireshark install on the servers.
+
+Webserver 2
+
+![alt text](./webserver2.png)
+
+
+Webserver 1
+
+![alt text](./wire1.png)
+
+Nfs server
+
+![alt text](./nfs.png)
+
+Db server
+
+![alt text](./db.png)
+
+LB server
+
+![alt text](./lb.png)
+
+Go back to git terminal
+
+git checkout prj-11
+
+
 
 
 
