@@ -226,6 +226,26 @@ Go back to git terminal
 
 git checkout prj-11
 
+Run the commands
+
+Update the playbook
+
+![alt text](./playbook-updated.png)
+
+Sync with github
+
+Run the playbook
+
+ansible-playbook -i /var/lib/jenkins/jobs/ansible/builds/10/archive/inventory/dev.yml /var/lib/jenkins/jobs/ansible/builds/10/archive/playbooks/common.yml 
+
+
+Success
+
+Check if it worked on NFS server
+
+![alt text](./final.png)
+
+
 
 
 
