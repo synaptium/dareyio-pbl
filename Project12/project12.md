@@ -131,4 +131,161 @@ This happened because i lost my aws account and created EC2 instaces afresh.
 
 ![alt text](./ass.png)
 
+Connected to remote server and tried to run ansible all -m ping
+
+Some of the server had the wrong private ip and user stated in the dev.yml file.
+
+I saved and tried to connect to the remote server and got errors connection.
+
+I had to open the ssh config file on my pc to see that the jenkins ansible server ip there is wrong.
+
+I tried againa and same thing. So i checked aws and saw that the server had errors.
+
+So i stopped it and started it. Errors now gone.
+
+Tried to connect agai remotely and connected.
+
+Ran the command ansible all -m ping
+
+It piged al servers minus LB server.
+
+Ignored it and did a cd to the ansible directory amd ran my playbook.
+
+It worked.
+
+
+![alt text](./succed.png)
+
+
+Log into LB server.
+
+![alt text](./wireshark-lost.png)
+
+wireshark has been deleted.
+
+Create a new branch on github.
+
+![alt text](./refactor.png)
+
+Pause all intances on ec2 minus jenkins
+
+Create 2 New Redhat ec2 severs and open ports 80 and port 8080
+
+![alt text](./stop.png)
+
+Update my inventory ansible-config-artifact/inventory/uat.yml file with private IP addresses of your 2 UAT Web servers
+
+![alt text](./uatip.png)
+
+Under ansible folder, in vscode create the following
+
+![alt text](./tree.png)
+
+Now login to the jenkins server via ssh and edit /etc/ansible/ansible.cfg
+
+![alt text](./edit.png)
+
+Within the static-assignments folder, create a new assignment for uat-webservers uat-webservers.yml. This is where you will reference the role.
+
+---
+- hosts: uat-webservers
+  roles:
+     - webserver
+
+![alt text](./uato.png)
+
+Edit site.yml to the following
+
+---
+- hosts: all
+- import_playbook: ../static-assignments/common.yml
+
+- hosts: uat-webservers
+- import_playbook: ../static-assignments/uat-webservers.yml
+
+
+![alt text](./site.png)
+
+Edit main.yml under tasks folder
+
+and paste in the following
+
+---
+- name: install apache
+  become: true
+  ansible.builtin.yum:
+    name: "httpd"
+    state: present
+
+- name: install git
+  become: true
+  ansible.builtin.yum:
+    name: "git"
+    state: present
+
+- name: clone a repo
+  become: true
+  ansible.builtin.git:
+    repo: https://github.com/<your-name>/tooling.git
+    dest: /var/www/html
+    force: yes
+
+- name: copy html content to one level up
+  become: true
+  command: cp -r /var/www/html/html/ /var/www/
+
+- name: Start service httpd, if not started
+  become: true
+  ansible.builtin.service:
+    name: httpd
+    state: started
+
+- name: recursively remove /var/www/html/html/ directory
+  become: true
+  ansible.builtin.file:
+    path: /var/www/html/html
+    state: absent
+
+
+Now do a push to github main branch.
+
+Go to github and do a pull request.
+
+make sure to select main branch as source.
+
+
+![alt text](./pull.png)
+
+
+On bash terminal on vscode do a git checkout main.
+
+and do a git pull  so that the changes from main branch on github matches tha on our pc.
+
+Run ansible playbook
+
+sudo ansible-playbook -i /home/ubuntu/ansible-config-artifact/inventory/uat.yml /home/u
+buntu/ansible-config-artifact/playbooks/site.yml
+
+I got an error.
+
+
+![alt text](./project.png)
+
+So i looked at the site.yml
+
+![alt text](./kk.png)
+
+Host is difeined as all
+
+So it is calling all servers and i stopped the instances LB,DB,Webserver 1, Webserver 2, and NFS
+
+si i went to Ec2 and started all the instance and got success.
+
+![alt text](./winner.png)
+
+Now both sites are loading
+
+![alt text](./final.png)
+
+![alt text](./final2.png)
 
