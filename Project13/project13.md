@@ -101,6 +101,19 @@ ansible-config-artifact/roles/ngnix/tasks/main.yml and edit below
 ![alt text](./ngnix4.png)
 
 
+Download Roles folder from ubuntu server
+
+Paste ansible folder, replace the roles folder
+
+push to main branch to github.
+
+ansible-config-artifact/roles/apache/defaults/main.yml 
+
+
+Edit the neccesary Nginx files
+
+We move on
+
 
 
 
