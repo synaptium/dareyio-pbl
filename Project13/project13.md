@@ -114,6 +114,80 @@ Edit the neccesary Nginx files
 
 We move on
 
+Lets pause
+
+One big mistake i made is i did not know i was supposed to watch the git and ansible courses.
+
+so after this project13, ill go and watch.
+
+Now
+
+My thought was
+
+Edit on vscode , push to github, github via webhook writes to server. Github cant.
+
+So i was editing the files on the server via remote connection on nano or vi, then down the roles file on my pc and over write the files in the roles folder under the ansible folder on my pc, then go to vscode and push to github.
+
+The better way is to edit on vscode, push to github and do
+
+git pull https://github.com/synaptium/ansible-config-mgt.git
+
+This way i download the complete folder on the server and run my playbook from there.
+
+Now i encountered several errors whiles running playbook but i forgot to documents.
+
+Here are some
+
+![alt text](./error.png)
+
+In this case i was to put a quote around that host ip like so.
+
+![alt text](./ip.png)
+
+
+Also another issue, david helped with this.
+
+I changed the username for the mysql as below
+
+![alt text](./username.png)
+
+
+I had other errors, like running the playbook from the root instead of the folder for ansible
+
+I also had errors of several files missing.
+
+Since i had not known the git pull by then, i was just creating the file on the servers that were missing.
+
+I had another error
+
+![alt text](./artifact.png)
+
+You see i was running playbook from ansible-config-mgt directory but the error was saying it did not find a file in the ansible-config-artifact directory.
+
+The issues was in my config file for ansible
+
+
+![alt text](./gitty.png)
+
+The file for ansible ws the artifact one and not mgt
+
+
+
+So finally ran my playbbok and had success.
+
+
+![alt text](./success.png)
+
+![alt text](./success2.png)
+
+![alt text](./success3.png)
+
+
+
+P.S the ansible-config-artifact folder is the old folder..was having issues so i git a git clone and it dowbloaded the ansible-config-mgt folder i now worked with.
+
+
+
 
 
 
