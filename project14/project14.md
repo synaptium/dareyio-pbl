@@ -103,4 +103,8 @@ Now install blue ocean plugin
 
 ![alt text](./blue.png)
 
+In vscode got to ansible folder and create a folder called deploy and create a file under it called Jekinsfile
+
+
+
 

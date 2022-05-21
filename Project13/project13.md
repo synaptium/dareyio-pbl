@@ -134,6 +134,10 @@ git pull https://github.com/synaptium/ansible-config-mgt.git
 
 This way i download the complete folder on the server and run my playbook from there.
 
+To do git pull, you must be in the ansible directory you wanna pull for.
+
+and use sudo or become root by sudo su
+
 Now i encountered several errors whiles running playbook but i forgot to documents.
 
 Here are some
