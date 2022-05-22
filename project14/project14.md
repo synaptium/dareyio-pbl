@@ -206,6 +206,82 @@ It failed
 
 ![alt text](./failed.png)
 
+So the issue was that 
+
+![alt text](./curly.png)
+
+Correct code
+
+   pipeline {
+    agent any
+
+   stages {
+     stage("Initial cleanup") {
+           steps {
+             dir("${WORKSPACE}") {
+               deleteDir()
+            }
+           }
+         }
+
+     stage('Build') {
+       steps {
+         script {
+           sh 'echo "Building Stage"'
+         }
+       }
+     }
+
+     stage('Test') {
+       steps {
+         script {
+           sh 'echo "Testing Stage"'
+         }
+       }
+     }
+
+     stage('Package'){
+       steps {
+         script {
+	       sh 'echo "Packaging App" '
+	     }
+       }
+     } 
+
+     stage('Deploy'){
+       steps {
+         script {
+	       sh 'echo "Deploying to Dev" '
+	     }
+       }
+     }
+
+     stage("clean up"){
+       steps {
+        cleanWs()
+      }
+     }
+      
+     }
+}
+
+It works
+
+
+![alt text](./codework.png)
+
+
+Now you need to do a merge request, to update main branch with data from feature/jenkinspipeline-stages branch on Github
+
+To do this if you go to ansible repo on Github and go to main branch, you should see a pull request or go to feature/jenkinspipeline-stages branch and click on contribute and choose open a request, then click pull request, then merge pull request, then confirm merge.
+
+![alt text](./mainbuild.png)
+
+So because of the merge, it triggers main build. It succeeded.
+
+![alt text](./main.png)
+
+
 
 
 
