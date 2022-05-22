@@ -105,6 +105,110 @@ Now install blue ocean plugin
 
 In vscode got to ansible folder and create a folder called deploy and create a file under it called Jekinsfile
 
+push to git hub and do a git pull on remote server
+
+Now configure the ansible project in jenkins
+
+Under build configuration
+
+change to deploy/Jenkins file
+
+Now go to dashboard, click on project name and click on main
+
+The click on build now
+
+
+![alt text](./buildnow.png)
+
+Click on open blue ocean
+
+
+Now create a new branch called  feature/jenkinspipeline-stages  with git checkout -b feature/jenkinspipeline-stages
+
+Do this in git bach terminal on vscode
+
+On git bash do 
+
+git add .
+
+git commit -m "add jenkins file"
+
+git push
+
+It did a pull merge request on github....
+
+so i merged
+
+Go to jenkins, under ansible project, click scan repository now
+
+Jenkins is seeing the new branch
+
+
+![alt text](./jenkinsee.png)
+
+![alt text](./jenkinsee2.png)
+
+Now edit the jenkin file
+
+add the following code
+
+   pipeline {
+    agent any
+
+   stages {
+     stage("Initial cleanup") {
+           steps {
+             dir("${WORKSPACE}") {
+               deleteDir()
+            }
+           }
+         }
+     stage('Build') {
+       steps {
+         script {
+           sh 'echo "Building Stage"'
+         }
+       }
+     }
+
+     stage('Test') {
+       steps {
+         script {
+           sh 'echo "Testing Stage"'
+         }
+       }
+     }
+
+     stage('Package'){
+       steps {
+         script {
+	       sh 'echo "Packaging App" '
+	     }
+       }
+     }  
+
+     stage('Deploy'){
+       steps {
+         script {
+	       sh 'echo "Deploying to Dev" '
+	     }
+       }
+
+    stage("clean up")
+      steps {
+        cleanWs()
+            }
+      }
+    }  
+}
+
+It failed
+
+![alt text](./failed.png)
+
+
+
+
 
 
 
