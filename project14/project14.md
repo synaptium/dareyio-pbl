@@ -417,9 +417,46 @@ Click generate
 
 Copy output
 
+and paste in 
+
+![alt text](./see.png)
+
+Now go to deavids repo and download ansible folder.
+
+replace the following files with his
+
+Roles/Mysql/Default/ Main.yml
+
+Roles/Nginx/tasks/main.yml
+
+Now go to jenkins and scan repo
+
+It gave an error in nginx/task/main.yml
+
+So i compared it to davids repo and see davids was empty so i emptied mine too
+
+Pushed to github again and it worked.
+
+![alt text](./win.png)
+
+
+Go to jenkins file on vscode and add following from documentation
+
+parameters {
+      string(name: 'inventory', defaultValue: 'dev',  description: 'This is the inventory file for the environment to deploy configuration')
+    }
+
+![alt text](./parameters.png)
+
+Edit this part too
 
 
 
+
+![alt text](./edit.png)
+
+
+Scan repo on jenkins
 
 
 
