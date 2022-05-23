@@ -281,6 +281,151 @@ So because of the merge, it triggers main build. It succeeded.
 
 ![alt text](./main.png)
 
+Now install ansible on jenkins
+
+sudo yum install ansible -y
+
+Verify ansible is installed.
+
+![alt text](./verify.png)
+
+There are some ansible dependencies that need to be installed.
+
+Do a sudo su to switch to root
+
+python3 -m pip install --upgrade setuptools
+python3 -m pip install --upgrade pip
+python3 -m pip install PyMySQL
+python3 -m pip install mysql-connector-python
+python3 -m pip install psycopg2==2.7.5 --ignore-installed
+
+ansible-galaxy collection install community.postgresql
+
+
+Do it one by one
+
+Install ansible on Jenkins
+
+![alt text](./ansi.png)
+
+Run Ansible playbook
+
+Launch 2 instances
+
+Ngnix- red hat and Db - ubuntu
+
+
+Remove all the old code in jenkins file and add below
+
+This is the ansible playbook
+
+pipeline{
+  agent any
+  
+  environment {
+      ANSIBLE_CONFIG="${WORKSPACE}/deploy/ansible.cfg"
+    }
+
+  stages {   
+    stage("Initial cleanup") {
+          steps {
+            dir("${WORKSPACE}") {
+              deleteDir()
+            }
+          }
+        }
+
+      stage('Checkout SCM') {
+         steps{
+            git branch: 'feature/jenkinspipeline-stages', url: 'https://github.com/synaptium/ansible-config-mgt.git'
+         }
+       }
+       stage('Prepare Ansible For Execution') {
+        steps {
+          sh 'echo ${WORKSPACE}' 
+          sh 'sed -i "3 a roles_path=${WORKSPACE}/roles" ${WORKSPACE}/deploy/ansible.cfg'  
+        }
+       }
+
+      stage('Run Ansible playbook') {
+        steps {
+           ansiblePlaybook become: true, colorized: true, credentialsId: 'private-key', disableHostKeyChecking: true, installation: 'ansible', inventory: 'inventory/${inventory}', playbook: 'playbooks/site.yml'
+         }
+      }
+
+      stage('Clean Workspace after build'){
+        steps{
+          cleanWs(cleanWhenAborted: true, cleanWhenFailure: true, cleanWhenNotBuilt: true, cleanWhenUnstable: true, deleteDirs: true)
+        }
+      }
+   }
+
+}
+
+
+Jenkins needs to ssh into the instanes so we need to pass the keys to jenkins
+
+Now go to jenkins, click on manage jekins, credentials, global, add credentials 
+
+Choose ssh user with private key.
+
+I got a crumb error.
+
+To fx this go to jenkins manage, install plugin, install crumb issuer plugin.
+
+This worked for me
+
+In the beginning of davids video at about 21:50, he showd other solutions
+
+Now enter thiese settings below for setup of credentials
+
+![alt text](./jenkinskey.png)
+
+![alt text](./jenkinskey2.png)
+
+Now go to dashboard, click on ansible project, click pieline syntax
+
+Its all empty
+
+Now go back to dashboard, manage jenkins, global tool config
+
+scroll down to ansible
+
+Name  - ansible
+
+Path  is
+
+Got to server and do a which ansible
+
+copy the path and paste
+
+/usr/bin/
+
+
+Go back to pipeline synatax
+
+choose settings below
+
+![alt text](./config.png)
+
+![alt text](./config2.png)
+
+![alt text](./config3.png)
+
+
+Click generate
+
+Copy output
+
+
+
+
+
+
+
+
+
+
 
 
 
