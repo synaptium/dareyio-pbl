@@ -587,6 +587,51 @@ Configure artifactory in Jenkins
 ![alt text](./ade.png)
 
 
+Create a new jenkinsfile in todo root folder.
+
+and paste the following from documentation
+
+pipeline {
+    agent any
+
+  stages {
+
+     stage("Initial cleanup") {
+          steps {
+            dir("${WORKSPACE}") {
+              deleteDir()
+            }
+          }
+        }
+
+    stage('Checkout SCM') {
+      steps {
+            git branch: 'main', url: 'https://github.com/darey-devops/php-todo.git'
+      }
+    }
+
+    stage('Prepare Dependencies') {
+      steps {
+             sh 'mv .env.sample .env'
+             sh 'composer install'
+             sh 'php artisan migrate'
+             sh 'php artisan db:seed'
+             sh 'php artisan key:generate'
+      }
+    }
+  }
+}
+
+
+
+Go to ansible/roles/mysql/default/main.yml and edit the file
+
+like so
+
+![alt text](./homestead.png)
+
+Ip address of mysql homestead user should be ip address of jenkins server.
+
 
 
 
