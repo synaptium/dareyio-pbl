@@ -632,6 +632,13 @@ like so
 
 Ip address of mysql homestead user should be ip address of jenkins server.
 
+Push to github, main branch
+
+Go to jenkins and go to main branch and run with parameters
+
+![alt text](./homie.png)
+
+
 
 
 
