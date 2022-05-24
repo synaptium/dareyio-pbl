@@ -450,13 +450,147 @@ parameters {
 
 Edit this part too
 
+It did not work.
 
+![alt text](./anssy.png)
 
+![alt text](./devyml.png)
+
+I deited to dev.yml
 
 ![alt text](./edit.png)
 
 
 Scan repo on jenkins
+
+Now merge the both repos by doing a pull request on the features branch
+
+Thiis so the files will match each other
+
+Now go to jenkins and go to main branch and do a build with parameters
+
+For me it failed , i had to go to my dev.yml on github ib main branch to see that the ips there are wrong
+
+so i deited it on vscode and pushed to github. Now it works.
+
+Next task
+
+Fork the Repo
+
+https://github.com/darey-devops/php-todo.git
+
+![alt text](./fork.png)
+
+Go to server and do a git clone https://github.com/synaptium/php-todo.git
+
+Go to server terminal and install following. Make sure to switch to root
+
+yum module reset php
+
+yum module enable php:remi-7.4
+
+yum install -y php php-common php-mbstring php-opcache php-intl php-xml php-gd php-curl php-mysqlnd php-fpm php-json
+
+systemctl start php-fpm
+
+systemctl enable php-fpm
+
+curl -sS https://getcomposer.org/installer | php
+
+sudo mv composer.phar /usr/bin/composer
+
+Go to jenkins to intall plugins
+
+install plot
+
+install artifactory
+
+No go to davids repo, roles folder and copy artifactory and squarenob folders into my ansible rolders
+
+Go to ci file inventory/ci and edit like this
+
+[jenkins]
+<Jenkins-Private-IP-Address>
+
+[nginx]
+<Nginx-Private-IP-Address>
+
+[sonar]
+<sonar-Private-IP-Address>
+
+[artifactory]
+172.31.20.90  ansible_ssh_user='ec2-user'
+
+
+[db]
+172.31.31.25 ansible_ssh_user='ubuntu'
+
+
+Go to site.yml in playbooks and edit like this
+
+---
+# - hosts: db
+# - name: database assignment
+#   ansible.builtin.import_playbook: ../static-assignments/database.yml
+
+# - hosts: nginx
+# - name: nginx assignment
+#   ansible.builtin.import_playbook: ../static-assignments/nginx.yml
+
+ - hosts: artifactory
+ - name: artifactory assignment
+   ansible.builtin.import_playbook: ../static-assignments/artifactory.yml
+
+# - hosts: sonar
+# - name: sonar assignment
+#  ansible.builtin.import_playbook: ../static-assignments/sonar.yml
+
+# - hosts: todo
+# - name: Deploy the todo application
+#   ansible.builtin.import_playbook: ../static-assignments/deployment.yml
+
+
+Now push to github
+
+Now go to features branch and do a pull request to merge with main
+
+
+Go to gitbash terminal and do git checkout main to swithc then
+
+git checkout pull
+
+go to jekins file and edit this to main
+
+![alt text](./main2.png)
+
+
+Push to main branch from now on so we can move faster
+
+From 2:10:59 of video - update summaries
+
+Go to main branh on jenkins and click on buiold with parameters, enter ci
+
+![alt text](./buildart.png)
+
+open artifactory on port 8081
+
+![alt text](./jfrog.png)
+
+Login with admin and password
+
+Create a repo in jfrog call PBL
+
+![alt text](./pbl.png)
+
+Configure artifactory in Jenkins
+
+![alt text](./ade.png)
+
+
+
+
+
+
 
 
 
