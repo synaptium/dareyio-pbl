@@ -638,9 +638,16 @@ Go to jenkins and go to main branch and run with parameters
 
 ![alt text](./homie.png)
 
+I could not figure out how to push direct to to do repo. so just created the jenkinsfile on github and saved it
 
 
+Ran playbook for todo and worked
 
+![alt text](./worked.png)
+
+2nd playbook worked
+
+![alt text](./test.png)
 
 
 

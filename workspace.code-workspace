@@ -6,6 +6,9 @@
 		{
 			"name": "ansible-config-mgt-2",
 			"path": "ansible-config-mgt-2"
+		},
+		{
+			"path": "php-todo-main"
 		}
 	],
 	"settings": {}
