@@ -649,6 +649,99 @@ Ran playbook for todo and worked
 
 ![alt text](./test.png)
 
+Sonarqbe
+
+Installation And Configuration Of SonarQube
+The installation and configuration can be done with SonarQube role which I am currently working on.
+
+After the installation, sonarqube will run on port 9000.
+
+![alt text](./1.png)
+
+![alt text](./2.png)
+
+Configure And Jenkins For Quality Gate
+In Jenkins, install SonarScanner plugin.
+
+![alt text](./4.png)
+
+Navigate to configure system in Jenkins and add SonarQube server as shown below.
+
+![alt text](./5.png)
+
+Generate authentication token in SonarQube. Configure Quality Gate Jenkins Webhook in SonarQube – The URL should point to your Jenkins server "http://{JENKINS_HOST}/sonarqube-webhook/".
+
+![alt text](./6.png)
+
+![alt text](./7.png)
+
+![alt text](./8.png)
+
+Update Jenkins Pipeline to include SonarQube scanning and Quality Gate with:
+
+    stage('SonarQube Quality Gate') {
+        environment {
+            scannerHome = tool 'SonarQubeScanner'
+        }
+        steps {
+            withSonarQubeEnv('sonarqube') {
+                sh "${scannerHome}/bin/sonar-scanner"
+            }
+
+        }
+    }
+
+
+After updating and building the Jenkins job it will fail because we have not updated "sonar-scanner.properties"
+
+Configure sonar-scanner.properties – From the step above, Jenkins will install the scanner tool on the Linux server. You will need to go into the tools directory on the server to configure the properties file in which SonarQube will require to function during pipeline execution in "/var/lib/jenkins/tools/hudson.plugins.sonar.SonarRunnerInstallation/SonarQubeScanner/conf/sonar-scanner.properties".
+
+Add the following in the sonar-scanner.properties
+
+sonar.host.url=http://<SonarQube-Server-IP-address>:9000
+sonar.projectKey=php-todo
+#----- Default source code encoding
+sonar.sourceEncoding=UTF-8
+sonar.php.exclusions=**/vendor/**
+sonar.php.coverage.reportPaths=build/logs/clover.xml
+sonar.php.tests.reportPath=build/logs/junit.xml
+
+
+![alt text](./9.png)
+
+![alt text](./10.png)
+
+Conditionally deploy to higher environments
+Replace the SonarQube Quality Gate with:
+      when { branch pattern: "^develop*|^hotfix*|^release*|^main*", comparator: "REGEXP"}
+        environment {
+            scannerHome = tool 'SonarQubeScanner'
+        }
+        steps {
+            withSonarQubeEnv('sonarqube') {
+                sh "${scannerHome}/bin/sonar-scanner -Dproject.settings=sonar-project.properties"
+            }
+            timeout(time: 1, unit: 'MINUTES') {
+                waitForQualityGate abortPipeline: true
+            }
+        }
+    }
+After doing all this, the job isn't running as expected it will just be running nonstop when it gets to the "SonarQube Quality Gate" stage so I was able to solve this by scaling-up the server adding slave nodes to the Jenkins.
+
+![alt text](./11.png)
+
+![alt text](./12.png)
+
+![alt text](./13.png)
+
+![alt text](./14.png)
+
+![alt text](./15.png)
+
+Done
+
+
+
 
 
 
