@@ -1342,10 +1342,11 @@ resource "aws_db_instance" "ACS-rds" {
   multi_az               = "true"
 }
 
+```
 
 Create a file called tooling.sh
 
-```
+
 
 ```
 
