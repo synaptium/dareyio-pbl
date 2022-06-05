@@ -33,16 +33,28 @@ resource "aws_subnet" "private" {
 
 I still had issues with terraform plan cos when i ran it showed that it was creatting only 2 private subnets
 
-so i found out that var.preferred_number_of_private_subnets == null ? length(data.aws_availability_zones.available.names) : var.preferred_number_of_private_subnets
+so i found out that 
+
+```
+
+var.preferred_number_of_private_subnets == null ? length(data.aws_availability_zones.available.names) : var.preferred_number_of_private_subnets
+
+```
 
 was 
 
+```
+
 var.preferred_number_of_public_subnets == null ? length(data.aws_availability_zones.available.names) : var.preferred_number_of_public_subnets
+
+```
 
 
 Moving on
 
 Create a new file called internet-gw.tf and paste following
+
+```
 
 resource "aws_internet_gateway" "ig" {
   vpc_id = aws_vpc.main.id
@@ -53,6 +65,8 @@ resource "aws_internet_gateway" "ig" {
     },
   )
 }
+
+```
 
 Create a new file file called nat-gw.tf and paste following
 
