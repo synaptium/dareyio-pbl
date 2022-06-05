@@ -70,6 +70,8 @@ resource "aws_internet_gateway" "ig" {
 
 Create a new file file called nat-gw.tf and paste following
 
+```
+
 resource "aws_eip" "nat_eip" {
   vpc        = true
   depends_on = [aws_internet_gateway.ig]
@@ -96,6 +98,8 @@ resource "aws_nat_gateway" "nat" {
   )
 }
 
+```
+
 This create elastic ip and nat gateway
 
 Now lets do route tables
@@ -103,8 +107,6 @@ Now lets do route tables
 create a file called routes.tf
 
 Paste the following code
-
-```
 
 ```
 
@@ -166,6 +168,7 @@ resource "aws_route" "public-rtb-route" {
   destination_cidr_block = "0.0.0.0/0"
   gateway_id             = aws_internet_gateway.ig.id
 }
+
 
 ```
 
