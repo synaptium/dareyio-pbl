@@ -86,6 +86,8 @@ Paste the following code
 
 ```
 
+```
+
  #create private route table
 
 resource "aws_route_table" "private-rtb" {
@@ -145,6 +147,8 @@ resource "aws_route" "public-rtb-route" {
   gateway_id             = aws_internet_gateway.ig.id
 }
 
+```
+
 Run terraform plan to see if there is any error and run terraform apply -auto-approve.
 
 ![alt text](./plan.png)
@@ -152,6 +156,8 @@ Run terraform plan to see if there is any error and run terraform apply -auto-ap
 Now create a certificate manager
 
 Create a file called cert.tf and paste in the following code.
+
+```
 
 #The entire section create a certiface, public zone, and validate the certificate using DNS method
 
@@ -228,6 +234,9 @@ resource "aws_route53_record" "wordpress" {
 
 Create a file called security.tf
 
+
+```
+
 #security group for alb, to allow acess from any where for HTTP and HTTPS traffic
 
 resource "aws_security_group" "ext-alb-sg" {
@@ -301,6 +310,7 @@ resource "aws_security_group" "bastion_sg" {
 
 
 #security group for nginx reverse proxy, to allow access only from the extaernal load balancer and bastion instance
+
 
 resource "aws_security_group" "nginx-sg" {
   name   = "nginx-sg"
@@ -462,7 +472,12 @@ resource "aws_security_group_rule" "inbound-mysql-webserver" {
 }
 
 
+```
+
 Create a file called alb.tf
+
+
+```
 
 #----------------------------
 #External Load balancer for reverse proxy nginx
@@ -603,11 +618,14 @@ resource "aws_lb_listener_rule" "tooling-listener" {
   }
 }
 
+
+```
+
 run terraform apply
 
 ![alt text](./terra.png)
 
-
+```
 
 Create a file called roles.tf
 
@@ -665,4 +683,4 @@ resource "aws_iam_instance_profile" "ip" {
   role = aws_iam_role.ec2_instance_role.name
 }
 
-
+```
