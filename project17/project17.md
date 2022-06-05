@@ -84,7 +84,9 @@ create a file called routes.tf
 
 Paste the following code
 
-``` #create private route table
+```
+
+ #create private route table
 
 resource "aws_route_table" "private-rtb" {
   vpc_id = aws_vpc.main.id
@@ -220,7 +222,9 @@ resource "aws_route53_record" "wordpress" {
     zone_id                = aws_lb.ext-alb.zone_id
     evaluate_target_health = true
   }
-} ```
+} 
+
+```
 
 Create a file called security.tf
 
