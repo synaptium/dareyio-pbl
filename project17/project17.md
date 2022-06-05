@@ -122,7 +122,7 @@ resource "aws_route_table_association" "public-subnets-assoc" {
   route_table_id = aws_route_table.public-rtb.id
 }
 
-# create route for the private route table and attatch a nat gateway to it
+#create route for the private route table and attatch a nat gateway to it
 resource "aws_route" "private-rtb-route" {
   route_table_id         = aws_route_table.private-rtb.id
   destination_cidr_block = "0.0.0.0/0"
@@ -130,7 +130,7 @@ resource "aws_route" "private-rtb-route" {
 }
 
 
-# create route for the public route table and attach the internet gateway
+#create route for the public route table and attach the internet gateway
 resource "aws_route" "public-rtb-route" {
   route_table_id         = aws_route_table.public-rtb.id
   destination_cidr_block = "0.0.0.0/0"
@@ -145,21 +145,21 @@ Now create a certificate manager
 
 Create a file called cert.tf and paste in the following code.
 
-# The entire section create a certiface, public zone, and validate the certificate using DNS method
+#The entire section create a certiface, public zone, and validate the certificate using DNS method
 
-# Create the certificate using a wildcard for all the domains created in dentitoxprogold.us
+#Create the certificate using a wildcard for all the domains created in dentitoxprogold.us
 resource "aws_acm_certificate" "dentitoxprogold" {
   domain_name       = "*.dentitoxprogold.us"
   validation_method = "DNS"
 }
 
-# calling the hosted zone
+#calling the hosted zone
 data "aws_route53_zone" "dentitoxprogold" {
   name         = "dentitoxprogold.us"
   private_zone = false
 }
 
-# selecting validation method
+#selecting validation method
 resource "aws_route53_record" "dentitoxprogold" {
   for_each = {
     for dvo in aws_acm_certificate.dentitoxprogold.domain_validation_options : dvo.domain_name => {
@@ -177,13 +177,13 @@ resource "aws_route53_record" "dentitoxprogold" {
   zone_id         = data.aws_route53_zone.dentitoxprogold.zone_id
 }
 
-# validate the certificate through DNS method
+#validate the certificate through DNS method
 resource "aws_acm_certificate_validation" "dentitoxprogold" {
   certificate_arn         = aws_acm_certificate.dentitoxprogold.arn
   validation_record_fqdns = [for record in aws_route53_record.dentitoxprogold : record.fqdn]
 }
 
-# create records for tooling
+#create records for tooling
 resource "aws_route53_record" "tooling" {
   zone_id = data.aws_route53_zone.dentitoxprogold.zone_id
   name    = "tooling.dentitoxprogold.us"
@@ -197,7 +197,7 @@ resource "aws_route53_record" "tooling" {
 }
 
 
-# create records for wordpress
+#create records for wordpress
 resource "aws_route53_record" "wordpress" {
   zone_id = data.aws_route53_zone.dentitoxprogold.zone_id
   name    = "wordpress.dentitoxprogold.us"
@@ -212,7 +212,7 @@ resource "aws_route53_record" "wordpress" {
 
 Create a file called security.tf
 
-# security group for alb, to allow acess from any where for HTTP and HTTPS traffic
+#security group for alb, to allow acess from any where for HTTP and HTTPS traffic
 resource "aws_security_group" "ext-alb-sg" {
   name        = "ext-alb-sg"
   vpc_id      = aws_vpc.main.id
@@ -251,7 +251,7 @@ resource "aws_security_group" "ext-alb-sg" {
 }
 
 
-# security group for bastion, to allow access into the bastion host from you IP
+#security group for bastion, to allow access into the bastion host from you IP
 resource "aws_security_group" "bastion_sg" {
   name        = "vpc_web_sg"
   vpc_id = aws_vpc.main.id
@@ -321,7 +321,7 @@ resource "aws_security_group_rule" "inbound-bastion-ssh" {
 }
 
 
-# security group for ialb, to have acces only from nginx reverser proxy server
+#security group for ialb, to have acces only from nginx reverser proxy server
 resource "aws_security_group" "int-alb-sg" {
   name   = "my-alb-sg"
   vpc_id = aws_vpc.main.id
@@ -352,7 +352,7 @@ resource "aws_security_group_rule" "inbound-ialb-https" {
 }
 
  
-# security group for webservers, to have access only from the internal load balancer and bastion instance
+#security group for webservers, to have access only from the internal load balancer and bastion instance
 resource "aws_security_group" "webserver-sg" {
   name   = "my-asg-sg"
   vpc_id = aws_vpc.main.id
@@ -392,7 +392,7 @@ resource "aws_security_group_rule" "inbound-web-ssh" {
 }
 
 
-# security group for datalayer to alow traffic from websever on nfs and mysql port and bastiopn host on mysql port
+#security group for datalayer to alow traffic from websever on nfs and mysql port and bastiopn host on mysql port
 resource "aws_security_group" "datalayer-sg" {
   name   = "datalayer-sg"
   vpc_id = aws_vpc.main.id
@@ -442,7 +442,7 @@ resource "aws_security_group_rule" "inbound-mysql-webserver" {
 
 Create a file called alb.tf
 
-# ----------------------------
+#----------------------------
 #External Load balancer for reverse proxy nginx
 #---------------------------------
 
@@ -491,7 +491,7 @@ resource "aws_lb_listener" "nginx-listner" {
   }
 }
 
-# ----------------------------
+#----------------------------
 #Internal Load Balancers for webservers
 #---------------------------------
 
@@ -511,7 +511,7 @@ resource "aws_lb" "int-alb" {
   load_balancer_type = "application"
 }
 
-# --- target group  for wordpress -------
+#--- target group  for wordpress -------
 resource "aws_lb_target_group" "wordpress-tgt" {
   health_check {
     interval            = 10
@@ -529,7 +529,7 @@ resource "aws_lb_target_group" "wordpress-tgt" {
   vpc_id      = aws_vpc.main.id
 }
 
-# --- target group for tooling -------
+#--- target group for tooling -------
 resource "aws_lb_target_group" "tooling-tgt" {
   health_check {
     interval            = 10
@@ -547,8 +547,8 @@ resource "aws_lb_target_group" "tooling-tgt" {
   vpc_id      = aws_vpc.main.id
 }
 
-# For this aspect a single listener was created for the wordpress which is default,
-# A rule was created to route traffic to tooling when the host header changes
+#For this aspect a single listener was created for the wordpress which is default,
+#A rule was created to route traffic to tooling when the host header changes
 
 resource "aws_lb_listener" "web-listener" {
   load_balancer_arn = aws_lb.int-alb.arn
@@ -563,7 +563,7 @@ resource "aws_lb_listener" "web-listener" {
   }
 }
 
-# # listener rule for tooling target
+#listener rule for tooling target
 
 resource "aws_lb_listener_rule" "tooling-listener" {
   listener_arn = aws_lb_listener.web-listener.arn
