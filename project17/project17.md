@@ -84,7 +84,7 @@ create a file called routes.tf
 
 Paste the following code
 
-#create private route table
+``` #create private route table
 
 resource "aws_route_table" "private-rtb" {
   vpc_id = aws_vpc.main.id
@@ -220,7 +220,7 @@ resource "aws_route53_record" "wordpress" {
     zone_id                = aws_lb.ext-alb.zone_id
     evaluate_target_health = true
   }
-}
+} ```
 
 Create a file called security.tf
 
@@ -410,6 +410,7 @@ resource "aws_security_group_rule" "inbound-web-ssh" {
 
 
 #security group for datalayer to alow traffic from websever on nfs and mysql port and bastiopn host on mysql port
+
 resource "aws_security_group" "datalayer-sg" {
   name   = "datalayer-sg"
   vpc_id = aws_vpc.main.id
