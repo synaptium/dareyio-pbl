@@ -84,7 +84,7 @@ create a file called routes.tf
 
 Paste the following code
 
-# create private route table
+#create private route table
 resource "aws_route_table" "private-rtb" {
   vpc_id = aws_vpc.main.id
 
@@ -96,7 +96,7 @@ resource "aws_route_table" "private-rtb" {
   )
 }
 
-# create route table for the public subnets
+#create route table for the public subnets
 resource "aws_route_table" "public-rtb" {
   vpc_id = aws_vpc.main.id
 
@@ -108,14 +108,14 @@ resource "aws_route_table" "public-rtb" {
   )
 }
 
-# associate all private subnets to the private route table
+#associate all private subnets to the private route table
 resource "aws_route_table_association" "private-subnets-assoc" {
   count          = length(aws_subnet.private[*].id)
   subnet_id      = element(aws_subnet.private[*].id, count.index)
   route_table_id = aws_route_table.private-rtb.id
 }
 
-# associate all public subnets to the public route table
+#associate all public subnets to the public route table
 resource "aws_route_table_association" "public-subnets-assoc" {
   count          = length(aws_subnet.public[*].id)
   subnet_id      = element(aws_subnet.public[*].id, count.index)
