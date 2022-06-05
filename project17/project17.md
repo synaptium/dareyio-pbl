@@ -1292,6 +1292,8 @@ systemctl restart nginx
 rm -rf reverse.conf
 rm -rf /ACS-project-config
 
+```
+
 Create a file outputs.tf
 
 ```
@@ -1307,6 +1309,7 @@ output "alb_target_group_arn" {
 ```
 
 Create a file called RDS.tf
+
 ```
 
 # create DB subnet group from the private subnets
