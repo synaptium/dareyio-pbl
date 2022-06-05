@@ -1496,3 +1496,4 @@ systemctl restart httpd
 ```
 
 
+The end. All resources deployed. Now to project 18
