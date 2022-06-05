@@ -648,9 +648,12 @@ run terraform apply
 
 ![alt text](./terra.png)
 
-```
 
 Create a file called roles.tf
+
+```
+
+
 
 resource "aws_iam_role" "ec2_instance_role" {
   name = "ec2_instance_role"
