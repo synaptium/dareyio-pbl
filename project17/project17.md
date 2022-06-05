@@ -85,6 +85,7 @@ create a file called routes.tf
 Paste the following code
 
 #create private route table
+
 resource "aws_route_table" "private-rtb" {
   vpc_id = aws_vpc.main.id
 
@@ -97,6 +98,7 @@ resource "aws_route_table" "private-rtb" {
 }
 
 #create route table for the public subnets
+
 resource "aws_route_table" "public-rtb" {
   vpc_id = aws_vpc.main.id
 
@@ -109,6 +111,7 @@ resource "aws_route_table" "public-rtb" {
 }
 
 #associate all private subnets to the private route table
+
 resource "aws_route_table_association" "private-subnets-assoc" {
   count          = length(aws_subnet.private[*].id)
   subnet_id      = element(aws_subnet.private[*].id, count.index)
@@ -116,6 +119,7 @@ resource "aws_route_table_association" "private-subnets-assoc" {
 }
 
 #associate all public subnets to the public route table
+
 resource "aws_route_table_association" "public-subnets-assoc" {
   count          = length(aws_subnet.public[*].id)
   subnet_id      = element(aws_subnet.public[*].id, count.index)
@@ -123,6 +127,7 @@ resource "aws_route_table_association" "public-subnets-assoc" {
 }
 
 #create route for the private route table and attatch a nat gateway to it
+
 resource "aws_route" "private-rtb-route" {
   route_table_id         = aws_route_table.private-rtb.id
   destination_cidr_block = "0.0.0.0/0"
@@ -131,6 +136,7 @@ resource "aws_route" "private-rtb-route" {
 
 
 #create route for the public route table and attach the internet gateway
+
 resource "aws_route" "public-rtb-route" {
   route_table_id         = aws_route_table.public-rtb.id
   destination_cidr_block = "0.0.0.0/0"
@@ -148,18 +154,21 @@ Create a file called cert.tf and paste in the following code.
 #The entire section create a certiface, public zone, and validate the certificate using DNS method
 
 #Create the certificate using a wildcard for all the domains created in dentitoxprogold.us
+
 resource "aws_acm_certificate" "dentitoxprogold" {
   domain_name       = "*.dentitoxprogold.us"
   validation_method = "DNS"
 }
 
 #calling the hosted zone
+
 data "aws_route53_zone" "dentitoxprogold" {
   name         = "dentitoxprogold.us"
   private_zone = false
 }
 
 #selecting validation method
+
 resource "aws_route53_record" "dentitoxprogold" {
   for_each = {
     for dvo in aws_acm_certificate.dentitoxprogold.domain_validation_options : dvo.domain_name => {
@@ -178,12 +187,14 @@ resource "aws_route53_record" "dentitoxprogold" {
 }
 
 #validate the certificate through DNS method
+
 resource "aws_acm_certificate_validation" "dentitoxprogold" {
   certificate_arn         = aws_acm_certificate.dentitoxprogold.arn
   validation_record_fqdns = [for record in aws_route53_record.dentitoxprogold : record.fqdn]
 }
 
 #create records for tooling
+
 resource "aws_route53_record" "tooling" {
   zone_id = data.aws_route53_zone.dentitoxprogold.zone_id
   name    = "tooling.dentitoxprogold.us"
@@ -198,6 +209,7 @@ resource "aws_route53_record" "tooling" {
 
 
 #create records for wordpress
+
 resource "aws_route53_record" "wordpress" {
   zone_id = data.aws_route53_zone.dentitoxprogold.zone_id
   name    = "wordpress.dentitoxprogold.us"
@@ -213,6 +225,7 @@ resource "aws_route53_record" "wordpress" {
 Create a file called security.tf
 
 #security group for alb, to allow acess from any where for HTTP and HTTPS traffic
+
 resource "aws_security_group" "ext-alb-sg" {
   name        = "ext-alb-sg"
   vpc_id      = aws_vpc.main.id
@@ -252,6 +265,7 @@ resource "aws_security_group" "ext-alb-sg" {
 
 
 #security group for bastion, to allow access into the bastion host from you IP
+
 resource "aws_security_group" "bastion_sg" {
   name        = "vpc_web_sg"
   vpc_id = aws_vpc.main.id
@@ -283,6 +297,7 @@ resource "aws_security_group" "bastion_sg" {
 
 
 #security group for nginx reverse proxy, to allow access only from the extaernal load balancer and bastion instance
+
 resource "aws_security_group" "nginx-sg" {
   name   = "nginx-sg"
   vpc_id = aws_vpc.main.id
@@ -322,6 +337,7 @@ resource "aws_security_group_rule" "inbound-bastion-ssh" {
 
 
 #security group for ialb, to have acces only from nginx reverser proxy server
+
 resource "aws_security_group" "int-alb-sg" {
   name   = "my-alb-sg"
   vpc_id = aws_vpc.main.id
@@ -353,6 +369,7 @@ resource "aws_security_group_rule" "inbound-ialb-https" {
 
  
 #security group for webservers, to have access only from the internal load balancer and bastion instance
+
 resource "aws_security_group" "webserver-sg" {
   name   = "my-asg-sg"
   vpc_id = aws_vpc.main.id
