@@ -726,8 +726,6 @@ Create a file called efs.tf
 
 ```
 
-
-
 # create key from key management system
 resource "aws_kms_key" "ACS-kms" {
   description = "KMS key "
@@ -823,6 +821,7 @@ resource "aws_efs_access_point" "tooling" {
 
   }
 }
+
 
 ```
 
