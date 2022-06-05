@@ -1153,7 +1153,7 @@ resource "aws_autoscaling_attachment" "asg_attachment_tooling" {
   lb_target_group_arn    = aws_lb_target_group.tooling-tgt.arn
 }
 
-
+```
 
 Create a file called bastion.sh
 
