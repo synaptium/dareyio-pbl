@@ -16,10 +16,10 @@ Inside modules create the following dirs.
 
 ALB Autoscaling compute EFS RDS Security VPC
 
-Struture the files this way.
+Struture the files this way. Try
 
 
-![alt text](./structure.png.png)
+![alt text](./structure.png)
 
 ![alt text](./structure2.png)
 
