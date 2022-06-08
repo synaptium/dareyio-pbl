@@ -110,5 +110,5 @@ Destroy resources
 
 ![alt text](./done.png)
 
-The files for this project are located here.
 
+The files for this project are [located here](https://pages.github.com/).
