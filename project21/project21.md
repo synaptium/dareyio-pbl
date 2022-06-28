@@ -298,6 +298,7 @@ IMAGE_ID=$(aws ec2 describe-images --owners 099720109477 \
   'Name=architecture,Values=x86_64' \
   'Name=name,Values=ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-*' \
   | jq -r '.Images|sort_by(.Name)[-1]|.ImageId')
+
 ```
 
 Creating an SSH Key-Pair:
@@ -314,6 +315,8 @@ $ chmod 600 ssh/${NAME}.id_rsa
 
 ```
 Creating 3 Master nodes:
+
+```
 for i in 0 1 2; do
   instance_id=$(aws ec2 run-instances \
     --associate-public-ip-address \
@@ -371,7 +374,7 @@ The PKI Infrastructure is provisioned using cfssl which will have a Certificate 
 Creating a directory called ca-authority and cd into it:$ mkdir ca-authority && cd ca-authority
 Generating the CA configuration file, Root Certificate, and Private key:
 
-
+```
 {
 
 cat > ca-config.json <<EOF
@@ -412,6 +415,8 @@ EOF
 cfssl gencert -initca ca-csr.json | cfssljson -bare ca
 
 }
+
+```
 
 ![alt text](./8.png)
 
