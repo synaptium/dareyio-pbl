@@ -20,12 +20,12 @@ The cfssl is an open source tool by Cloudflare used to setup a Public Key Infras
 
 Downloading the binary:
 
-``````
+```
 $ wget -q --show-progress --https-only --timestamping \
   https://storage.googleapis.com/kubernetes-the-hard-way/cfssl/1.4.1/linux/cfssl \
   https://storage.googleapis.com/kubernetes-the-hard-way/cfssl/1.4.1/linux/cfssljson
 
-`````
+```
 
 
 Making it executable: $ chmod +x cfssl cfssljson
