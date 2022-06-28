@@ -1366,7 +1366,64 @@ To reach the Kubernetes API Server publicly:$ curl --cacert /var/lib/kubernetes/
 
 To get the status of each component:$ kubectl get componentstatuses --kubeconfig admin.kubeconfig
 
-![alt text](./57.png)
+
+STEP 11: Configuring Role Based Access Control
+
+Configuring Role Based Access Control (RBAC) on one of the controller(master) nodes so that the api-server has necessary authorization for for the kubelet.
+
+Creating the ClusterRole
+
+```
+cat <<EOF | kubectl apply --kubeconfig admin.kubeconfig -f -
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  annotations:
+    rbac.authorization.kubernetes.io/autoupdate: "true"
+  labels:
+    kubernetes.io/bootstrapping: rbac-defaults
+  name: system:kube-apiserver-to-kubelet
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - nodes/proxy
+      - nodes/stats
+      - nodes/log
+      - nodes/spec
+      - nodes/metrics
+    verbs:
+      - "*"
+EOF
+
+```
+
+![alt text](./58.png)
+
+Creating the ClusterRoleBinding to bind the kubernetes user with the role created above
+
+```
+cat <<EOF | kubectl --kubeconfig admin.kubeconfig  apply -f -
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: system:kube-apiserver
+  namespace: ""
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: system:kube-apiserver-to-kubelet
+subjects:
+  - apiGroup: rbac.authorization.k8s.io
+    kind: User
+    name: kubernetes
+EOF
+
+
+```
+
+
+
 
 
 
