@@ -470,3 +470,6 @@ cfssl gencert \
 }
 ```
 
+![alt text](./13.png)
+
+![alt text](./14.png)
