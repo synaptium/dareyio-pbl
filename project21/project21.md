@@ -371,7 +371,7 @@ The PKI Infrastructure is provisioned using cfssl which will have a Certificate 
 Creating a directory called ca-authority and cd into it:$ mkdir ca-authority && cd ca-authority
 Generating the CA configuration file, Root Certificate, and Private key:
 
-```
+
 {
 
 cat > ca-config.json <<EOF
@@ -413,4 +413,3 @@ cfssl gencert -initca ca-csr.json | cfssljson -bare ca
 
 }
 
-```
