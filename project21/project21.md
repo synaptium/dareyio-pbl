@@ -513,3 +513,247 @@ cfssl gencert \
 }
 
 ```
+
+![alt text](./15.png)
+
+![alt text](./16.png)
+
+Generating Client Certificate and Private Key for kube-proxy
+
+```
+
+{
+
+cat > kube-proxy-csr.json <<EOF
+{
+  "CN": "system:kube-proxy",
+  "key": {
+    "algo": "rsa",
+    "size": 2048
+  },
+  "names": [
+    {
+      "C": "UK",
+      "L": "England",
+      "O": "system:node-proxier",
+      "OU": "DAREY.IO DEVOPS",
+      "ST": "London"
+    }
+  ]
+}
+EOF
+
+cfssl gencert \
+  -ca=ca.pem \
+  -ca-key=ca-key.pem \
+  -config=ca-config.json \
+  -profile=kubernetes \
+  kube-proxy-csr.json | cfssljson -bare kube-proxy
+
+}
+
+```
+
+![alt text](./17.png)
+
+![alt text](./18.png)
+
+Generating Client Certificate and Private Key for kube-controller-manager
+
+```
+
+{
+cat > kube-controller-manager-csr.json <<EOF
+{
+  "CN": "system:kube-controller-manager",
+  "key": {
+    "algo": "rsa",
+    "size": 2048
+  },
+  "names": [
+    {
+      "C": "UK",
+      "L": "England",
+      "O": "system:kube-controller-manager",
+      "OU": "DAREY.IO DEVOPS",
+      "ST": "London"
+    }
+  ]
+}
+EOF
+
+cfssl gencert \
+  -ca=ca.pem \
+  -ca-key=ca-key.pem \
+  -config=ca-config.json \
+  -profile=kubernetes \
+  kube-controller-manager-csr.json | cfssljson -bare kube-controller-manager
+
+}
+
+```
+
+![alt text](./19.png)
+
+Generating Client Certificate and Private Key for kubelet
+
+```
+for i in 0 1 2; do
+  instance="${NAME}-worker-${i}"
+  instance_hostname="ip-172-31-0-2${i}"
+  cat > ${instance}-csr.json <<EOF
+{
+  "CN": "system:node:${instance_hostname}",
+  "key": {
+    "algo": "rsa",
+    "size": 2048
+  },
+  "names": [
+    {
+      "C": "UK",
+      "L": "England",
+      "O": "system:nodes",
+      "OU": "DAREY.IO DEVOPS",
+      "ST": "London"
+    }
+  ]
+}
+EOF
+
+  external_ip=$(aws ec2 describe-instances \
+    --filters "Name=tag:Name,Values=${instance}" \
+    --output text --query 'Reservations[].Instances[].PublicIpAddress')
+
+  internal_ip=$(aws ec2 describe-instances \
+    --filters "Name=tag:Name,Values=${instance}" \
+    --output text --query 'Reservations[].Instances[].PrivateIpAddress')
+
+  cfssl gencert \
+    -ca=ca.pem \
+    -ca-key=ca-key.pem \
+    -config=ca-config.json \
+    -hostname=${instance_hostname},${external_ip},${internal_ip} \
+    -profile=kubernetes \
+    ${NAME}-worker-${i}-csr.json | cfssljson -bare ${NAME}-worker-${i}
+done
+```
+
+![alt text](./20.png)
+
+![alt text](./21.png)
+
+Generating Client Certificate and Private Key for kubernetes admin user
+
+```
+
+{
+cat > admin-csr.json <<EOF
+{
+  "CN": "admin",
+  "key": {
+    "algo": "rsa",
+    "size": 2048
+  },
+  "names": [
+    {
+      "C": "UK",
+      "L": "England",
+      "O": "system:masters",
+      "OU": "DAREY.IO DEVOPS",
+      "ST": "London"
+    }
+  ]
+}
+EOF
+
+cfssl gencert \
+  -ca=ca.pem \
+  -ca-key=ca-key.pem \
+  -config=ca-config.json \
+  -profile=kubernetes \
+  admin-csr.json | cfssljson -bare admin
+}
+
+```
+
+![alt text](./22.png)
+
+Generating Client Certificate and Private Key for Token Controller
+
+It is a part of the Kubernetes Controller Manager responsible for generating and signing service account tokens which are used by pods or other resources to establish connectivity to the api-server.
+
+```
+
+{
+
+cat > service-account-csr.json <<EOF
+{
+  "CN": "service-accounts",
+  "key": {
+    "algo": "rsa",
+    "size": 2048
+  },
+  "names": [
+    {
+      "C": "UK",
+      "L": "England",
+      "O": "Kubernetes",
+      "OU": "DAREY.IO DEVOPS",
+      "ST": "London"
+    }
+  ]
+}
+EOF
+
+cfssl gencert \
+  -ca=ca.pem \
+  -ca-key=ca-key.pem \
+  -config=ca-config.json \
+  -profile=kubernetes \
+  service-account-csr.json | cfssljson -bare service-account
+}
+
+```
+![alt text](./23.png)
+
+STEP 6: Distributing The Client And Server Certificates
+
+Sending all the client and server certificates to their respective instances. Starting from worker nodes
+
+```
+
+for i in 0 1 2; do
+  instance="${NAME}-worker-${i}"
+  external_ip=$(aws ec2 describe-instances \
+    --filters "Name=tag:Name,Values=${instance}" \
+    --output text --query 'Reservations[].Instances[].PublicIpAddress')
+  scp -i ../ssh/${NAME}.id_rsa \
+    ca.pem ${instance}-key.pem ${instance}.pem ubuntu@${external_ip}:~/; \
+done
+
+```
+
+![alt text](./24.png)
+
+```
+
+For the master nodes:
+
+```
+
+for i in 0 1 2; do
+instance="${NAME}-master-${i}" \
+  external_ip=$(aws ec2 describe-instances \
+    --filters "Name=tag:Name,Values=${instance}" \
+    --output text --query 'Reservations[].Instances[].PublicIpAddress')
+  scp -i ../ssh/${NAME}.id_rsa \
+    ca.pem ca-key.pem service-account-key.pem service-account.pem \
+    master-kubernetes.pem master-kubernetes-key.pem ubuntu@${external_ip}:~/;
+done
+
+```
+![alt text](./25.png)
+
+
+
+
