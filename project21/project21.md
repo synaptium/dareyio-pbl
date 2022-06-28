@@ -421,7 +421,7 @@ Provisioning Client/Server certificates for all the components that will communi
 
 Generating the Certificate Signing Request (CSR), Private Key and the Certificate for the Kubernetes Master Nodes (api-server).
 
-
+```
 
 {
 cat > master-kubernetes-csr.json <<EOF
@@ -468,4 +468,5 @@ cfssl gencert \
   -profile=kubernetes \
   master-kubernetes-csr.json | cfssljson -bare master-kubernetes
 }
+```
 
