@@ -31,3 +31,24 @@ $ wget -q --show-progress --https-only --timestamping \
 Making it executable: $ chmod +x cfssl cfssljson
 
 Moving the file to the bin directory:$ sudo mv cfssl cfssljson /usr/local/bin/
+
+![alt text](./2.png)
+
+
+STEP 3: Configuring The Network Infrastructure
+
+Creating a directory named k8s-cluster-from-ground-up and changing directory: $ mkdir 
+
+k8s-cluster-from-ground-up && cd k8s-cluster-from-ground-up
+
+Creating a VPC and storing its ID as a variable:
+
+```
+
+$ VPC_ID=$(aws ec2 create-vpc \
+--cidr-block 172.31.0.0/16 \
+--output text --query 'Vpc.VpcId'
+)
+
+```
+
