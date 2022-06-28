@@ -372,7 +372,6 @@ Creating a directory called ca-authority and cd into it:$ mkdir ca-authority && 
 Generating the CA configuration file, Root Certificate, and Private key:
 
 ```
-
 {
 
 cat > ca-config.json <<EOF
