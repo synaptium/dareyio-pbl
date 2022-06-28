@@ -951,6 +951,47 @@ EOF
 ![alt text](./33.png)
 
 
+Sending the encryption-config.yaml file to the master nodes using scp and a for loop
+
+![alt text](./34.png)
+
+Bootstrapping etcd cluster using tmux to work with multiple terminal sessions simultaneously. Opening 3 panes and ssh into the 3 master nodes and setting the synchronize-panes on
+
+
+For Master node 1
+
+```
+
+master_1_ip=$(aws ec2 describe-instances \
+--filters "Name=tag:Name,Values=${NAME}-master-0" \
+--output text --query 'Reservations[].Instances[].PublicIpAddress')
+ssh -i k8s-cluster-from-ground-up.id_rsa ubuntu@${master_1_ip}
+
+```
+
+For Master node 2
+
+```
+
+master_2_ip=$(
+aws ec2 describe-instances \
+--filters "Name=tag:Name,Values=${NAME}-master-1" \
+--output text --query 'Reservations[].Instances[].PublicIpAddress')
+ssh -i k8s-cluster-from-ground-up.id_rsa ubuntu@${master_2_ip}
+
+```
+
+For Master node 3
+
+```
+
+master_3_ip=$(aws ec2 describe-instances \
+--filters "Name=tag:Name,Values=${NAME}-master-2" \
+--output text --query 'Reservations[].Instances[].PublicIpAddress')
+ssh -i k8s-cluster-from-ground-up.id_rsa ubuntu@${master_3_ip}
+
+```
+
 
 
 
