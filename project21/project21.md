@@ -735,7 +735,7 @@ done
 
 ![alt text](./24.png)
 
-```
+
 
 For the master nodes:
 
