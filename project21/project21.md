@@ -29,4 +29,5 @@ $ wget -q --show-progress --https-only --timestamping \
 
 
 Making it executable: $ chmod +x cfssl cfssljson
+
 Moving the file to the bin directory:$ sudo mv cfssl cfssljson /usr/local/bin/
