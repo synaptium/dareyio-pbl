@@ -170,3 +170,8 @@ aws ec2 create-route \
   --gateway-id ${INTERNET_GATEWAY_ID}
 
 ```
+
+![alt text](./4.png)
+
+![alt text](./5.png)
+
